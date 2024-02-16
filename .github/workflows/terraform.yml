@@ -1,85 +1,43 @@
-name: 'Terraform Azure'
+name: 'Terraform Azure CI/CD'
 
 on:
   push:
     branches:
-      - main
+      - main # Adjust this as needed for your workflow
   pull_request:
     branches:
-      - main
-
-env:
-  TF_ENV: dev
+      - main # Adjust this as needed for your workflow
 
 jobs:
-  terraform-plan:
-    name: 'Terraform Plan'
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
-    outputs:
-      plan-file: ${{ steps.set-plan-file.outputs.plan-file }}
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+      TF_ENV: dev # Set your Terraform environment here
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: latest
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: latest
 
-    - name: Terraform Init with Dynamic Backend Config
-      run: |
-        terraform init \
-          -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
-          -backend-config="container_name=statefiles" \
-          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
+      - name: Terraform Init
+        run: terraform init
 
-    - name: Set Plan File Name
-      id: set-plan-file
-      run: echo "plan-file=planfile-${{ env.TF_ENV }}.tfplan" >> $GITHUB_OUTPUT
+      - name: Terraform Validate
+        run: terraform validate
 
-    - name: Terraform Plan
-      run: terraform plan -var-file=${{ env.TF_ENV }}.tfvar -out=${{ steps.set-plan-file.outputs.plan-file }}
+      - name: Terraform Plan
+        run: terraform plan -var-file="${{ env.TF_ENV }}.tfvars" -out="${{ env.TF_ENV }}.tfplan"
 
-    - name: Upload Terraform Plan as Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: terraform-plan-${{ env.TF_ENV }}
-        path: ${{ steps.set-plan-file.outputs.plan-file }}
-
-        
-  terraform-apply:
-    name: 'Terraform Apply'
-    needs: terraform-plan
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Download Terraform Plan
-      uses: actions/download-artifact@v2
-      with:
-        name: terraform-plan-${{ env.TF_ENV }}
-        path: .
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: latest
-
-    - name: Terraform Init with Dynamic Backend Config
-      run: |
-        terraform init \
-          -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
-          -backend-config="container_name=statefiles" \
-          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
-
-    - name: Terraform Apply
-      run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply "${{ env.TF_ENV }}.tfplan"
