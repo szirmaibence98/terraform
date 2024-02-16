@@ -32,7 +32,6 @@ jobs:
       - name: Terraform Init
         run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
 
-
       - name: Terraform Validate
         run: terraform validate
 
@@ -42,3 +41,9 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply "${{ env.TF_ENV }}.tfplan"
+
+      - name: Manual Destroy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "To destroy the infrastructure, run the following command:"
+          terraform destroy -auto-approve
