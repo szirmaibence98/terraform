@@ -42,7 +42,7 @@ module "nsg" {
   source              = "./modules/nsg"
   nsg_name            = "myCustomNSG"
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = module.resource_group.name
   security_rules      = [
     {
       name                       = "allow-http"
