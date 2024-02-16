@@ -81,4 +81,4 @@ jobs:
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
-      run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
+      run: terraform apply -var-file=dev.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
