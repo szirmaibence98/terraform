@@ -40,7 +40,7 @@ jobs:
           -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
           -backend-config="container_name=statefiles" \
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate" \
-          -var="tenant_id=${{ env.ARM_TENANT_ID }}"
+          -var="tenant_id: '${{ env.ARM_TENANT_ID }}'"
 
     - name: Set Plan File Name
       id: set-plan-file
@@ -76,12 +76,12 @@ jobs:
         terraform_version: latest
 
     - name: Terraform Init with Dynamic Backend Config
-    run: |
-      terraform init \
-        -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
-        -backend-config="container_name=statefiles" \
-        -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate" \
-        -var="tenant_id=${{ env.ARM_TENANT_ID }}"
+      run: |
+        terraform init \
+          -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
+          -backend-config="container_name=statefiles" \
+          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate" \
+          -var="tenant_id: '${{ env.ARM_TENANT_ID }}'"
 
     - name: Terraform Apply
       run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
