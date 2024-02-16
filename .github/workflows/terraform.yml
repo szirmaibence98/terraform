@@ -8,9 +8,9 @@ on:
     branches:
       - main
 
-      
+
 env:
-  TF_ENV: staging # Define your environment here. This can be dynamically set based on the branch, etc., if needed.
+  TF_ENV: dev
 
 jobs:
   terraform-plan:
@@ -82,4 +82,4 @@ jobs:
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
-      run: terraform apply -var-file=dev.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
+      run: terraform apply -var-file=${{ env.TF_ENV }}.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
