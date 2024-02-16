@@ -5,5 +5,15 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
   address_prefixes     = each.value.address_prefixes
-  network_security_group_id = each.value.nsg_id // This should be valid
+
+  dynamic "delegation" {
+    for_each = each.value.nsg_id != null ? [1] : []
+    content {
+      name = "delegation"
+      service_delegation {
+        name = "Microsoft.ContainerInstance/containerGroups"
+        actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+      }
+    }
+  }
 }
