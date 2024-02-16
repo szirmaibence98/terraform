@@ -7,6 +7,7 @@ module "resource_group" {
   }
 }
 
+
 module "vnet" {
   source              = "./modules/vnet"
   name                = "myVNet"
