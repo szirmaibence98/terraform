@@ -1,17 +1,25 @@
+module "resource_group" {
+  source   = "./modules/resource_group
+  name     = var.resource_group_name
+  location = var.location
+tags = {
+  Environment = var.environment
+}
 
+}
 
 module "vnet" {
-  source              = "./vnet_module"
+  source              = "./modules/vnet"
   name                = "myVNet"
   address_space       = ["10.0.0.0/16"]
-  location            = "East US"
-  resource_group_name = "myResourceGroup"
+  location            = var.location
+  resource_group_name = module.resource_group.name  
   tags                = { Environment = "Development" }
 }
 
 module "subnets" {
-  source              = "./subnet_module"
-  resource_group_name = "myResourceGroup"
+  source               = "./modules/subnet"
+  resource_group_name  = module.resource_group.name
   virtual_network_name = module.vnet.name
   subnets = [
     {

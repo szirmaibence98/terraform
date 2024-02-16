@@ -45,7 +45,7 @@ jobs:
       run: echo "plan-file=planfile-${{ env.TF_ENV }}.tfplan" >> $GITHUB_OUTPUT
 
     - name: Terraform Plan
-      run: terraform plan -out=${{ steps.set-plan-file.outputs.plan-file }}
+      run: terraform plan -var-file=dev.tfvar -out=${{ steps.set-plan-file.outputs.plan-file }}
 
     - name: Upload Terraform Plan as Artifact
       uses: actions/upload-artifact@v2
@@ -81,4 +81,4 @@ jobs:
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
-      run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
+      run: terraform apply -var-file=dev.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
