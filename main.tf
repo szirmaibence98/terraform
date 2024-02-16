@@ -22,7 +22,6 @@ terraform {
     storage_account_name  = "terraformszirmaidaimler"
     container_name        = "statefiles"
     key                   = "terraform.tfstate"
-    access_key            = ${{ secrets.STORAGE_ACCOUNT_ACCESS_KEY }} 
   }
 }
 
