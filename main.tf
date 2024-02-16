@@ -68,7 +68,7 @@ module "nsg" {
     }
   ]
   tags = {
-    Environment = "Production"
+    Environment = var.environment
   }
 }
 
@@ -100,22 +100,22 @@ module "nsg_flow_logs" {
 module "storage_account" {
   source              = "./modules/storage_account"
   name                = "mystorageaccountunique"
-  resource_group_name = azurerm_resource_group.name
-  location            = "eastus"
+  resource_group_name = module.resource_group.name
+  location            = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
   tags                = {
-    Environment = "Production"
+    Environment = var.environment
   }
 }
 
 module "log_analytics_workspace" {
   source              = "./modules/log_analytics_workspace"
   name                = "myloganalyticsworkspace"
-  location            = "eastus"
-  resource_group_name = azurerm_resource_group.name
+  location            = var.location
+  resource_group_name = module.resource_group.name
   sku                 = "PerGB2018"
   tags                = {
-    Environment = "Production"
+    Environment = var.environment
   }
 }
