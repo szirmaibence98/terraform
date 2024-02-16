@@ -41,7 +41,7 @@ module "subnets" {
 module "nsg" {
   source              = "./modules/nsg"
   nsg_name            = "myCustomNSG"
-  location            = "eastus"
+  location            = var.location
   resource_group_name = azurerm_resource_group.example.name
   security_rules      = [
     {
@@ -77,9 +77,11 @@ module "nsg" {
 
 module "network_watcher" {
   source              = "./modules/network_watcher"
+  network_watcher_name = "customNetworkWatcherName"
   location            = var.location
   resource_group_name = module.resource_group.name
 }
+
 
 module "nsg_flow_logs" {
   source               = "./modules/nsg_flow_logs"
