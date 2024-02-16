@@ -14,3 +14,7 @@ variable "environment" {
   description = "The deployment environment (e.g., dev, prod)."
   type        = string
 }
+
+variable "tenant_id" {
+  description = "The Azure tenant ID"
+}
