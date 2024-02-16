@@ -20,7 +20,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-      TF_ENV: staging # Set your environment name here
+      TF_ENV: staging # This can be dynamically set or changed as needed
 
     steps:
     - name: Checkout code
@@ -31,8 +31,12 @@ jobs:
       with:
         terraform_version: latest
 
-    - name: Terraform Init
-      run: terraform init
+    - name: Terraform Init with Dynamic Backend Config
+      run: |
+        terraform init \
+          -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
+          -backend-config="container_name=statefiles" \
+          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Set Plan File Name
       id: set-plan-file
@@ -56,8 +60,12 @@ jobs:
       with:
         terraform_version: latest
 
-    - name: Terraform Init
-      run: terraform init
+    - name: Terraform Init with Dynamic Backend Config (Again for Apply)
+      run: |
+        terraform init \
+          -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
+          -backend-config="container_name=statefiles" \
+          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
       run: terraform apply "${{ needs.terraform-plan.outputs.plan-file }}"
