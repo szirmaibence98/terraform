@@ -8,10 +8,12 @@ variable "virtual_network_name" {
   type        = string
 }
 
+
 variable "subnets" {
-  description = "List of subnets to create"
+  description = "A list of subnets and their properties"
   type = list(object({
     name             = string
     address_prefixes = list(string)
+    nsg_id           = string 
   }))
 }
