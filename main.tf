@@ -27,12 +27,12 @@ module "subnets" {
     {
       name             = "subnet1"
       address_prefixes = ["10.0.1.0/24"]
-      nsg_id           = module.nsg.nsg_id // Associate NSG with subnet1
+      nsg_id           = module.nsg.nsg_id
     },
     {
       name             = "subnet2"
       address_prefixes = ["10.0.2.0/24"]
-      // Optionally, include nsg_id here if you have a different NSG for subnet2 or leave it out if no NSG is needed
+      nsg_id           = null // Explicitly set to null if needed
     }
   ]
 }

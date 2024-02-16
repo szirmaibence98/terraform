@@ -14,6 +14,6 @@ variable "subnets" {
   type = list(object({
     name             = string
     address_prefixes = list(string)
-    nsg_id           = string 
+    nsg_id           = optional(string) // Make nsg_id optional
   }))
 }
