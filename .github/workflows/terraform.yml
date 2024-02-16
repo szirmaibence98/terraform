@@ -84,6 +84,7 @@ jobs:
           terraform apply -auto-approve "${{ env.TF_ENV }}.tfplan"
 
 
+
       - name: Manual Approval
         if: always() # This step always runs, but the next steps will only run if manual approval is given
         uses: tzkhan/awaiting-approval@v1
@@ -93,11 +94,9 @@ jobs:
           wait: true
   
       - name: Check if Manual Approval is Granted
-        if: steps.manual_approval.outputs.approved == 'true'
+        if: steps.manual_approval.outputs.approved == 'false'
         run: |
-          echo "Manual approval granted, proceeding with Terraform apply."
-        else:
-          echo "Manual approval not granted, skipping Terraform apply."          
+          echo "Manual approval not granted, skipping Terraform apply."        
 
   terraform_destroy:
     name: 'Terraform Destroy'
