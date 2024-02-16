@@ -7,9 +7,10 @@ on:
   pull_request:
     branches:
       - main # Adjust this as needed for your workflow
+  workflow_dispatch: # Add this line to enable manual triggering
 
 jobs:
-  terraform:
+  terraform_plan:
     name: 'Terraform'
     runs-on: ubuntu-latest
     env:
@@ -38,10 +39,58 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -var-file="${{ env.TF_ENV }}.tfvars" -out="${{ env.TF_ENV }}.tfplan"
 
+  terraform_apply:
+    name: 'Terraform Apply'
+    needs: terraform_plan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+      TF_ENV: dev # Set your Terraform environment here
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
+
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply "${{ env.TF_ENV }}.tfplan"
 
+  terraform_destroy:
+    name: 'Terraform Destroy'
+    needs: terraform
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+      TF_ENV: dev # Set your Terraform environment here
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
+
       - name: Terraform Destroy
-        if: github.ref == 'refs/heads/main'
         run: terraform destroy -auto-approve
