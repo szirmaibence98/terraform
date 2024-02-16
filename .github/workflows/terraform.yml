@@ -30,7 +30,8 @@ jobs:
           terraform_version: latest
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
+
 
       - name: Terraform Validate
         run: terraform validate
