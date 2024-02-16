@@ -100,7 +100,7 @@ module "nsg_flow_logs" {
 module "storage_account" {
   source              = "./modules/storage_account"
   name                = "mystorageaccountunique"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.name
   location            = "eastus"
   account_tier             = "Standard"
   account_replication_type = "GRS"
@@ -113,7 +113,7 @@ module "log_analytics_workspace" {
   source              = "./modules/log_analytics_workspace"
   name                = "myloganalyticsworkspace"
   location            = "eastus"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.name
   sku                 = "PerGB2018"
   tags                = {
     Environment = "Production"
