@@ -1,5 +1,5 @@
 output "workspace_id" {
-  value = azurerm_log_analytics_workspace.example.customer_id
+  value = azurerm_log_analytics_workspace.example.workspace_id
 }
 
 
