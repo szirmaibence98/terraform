@@ -46,20 +46,23 @@ jobs:
           path: ${{ env.TF_ENV }}.tfplan
 
   manual_approval:
-    name: Manual Approval
-    needs: terraform_plan
+    name: 'Manual Approval'
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Download Terraform Plan Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: terraform-plan
-          path: tfplan
+    if: github.ref == 'refs/heads/main'
 
-      - name: Wait for Approval
-        id: approval
-        uses: tzkhan/awaiting-approval@v1
+    steps:
+      - name: Request Manual Approval
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: { html_url: approvalUrl } } = await github.actions.createApprovalRequest({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            core.setOutput('approval_url', approvalUrl);
+            console.log(`Approval requested. Approval URL: ${approvalUrl}`);
 
   terraform_apply:
     name: 'Terraform Apply'
@@ -97,6 +100,7 @@ jobs:
           ls -al
           echo "Plan file: ${{ env.TF_ENV }}.tfplan"
           terraform apply -auto-approve "${{ env.TF_ENV }}.tfplan"
+
 
 
  
