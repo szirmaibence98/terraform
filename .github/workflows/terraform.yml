@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  TF_ENV: dev 
+  TF_ENV: dev
 
 jobs:
   terraform-plan:
