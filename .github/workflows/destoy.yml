@@ -68,6 +68,12 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: latest
+          
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v2
+        with:
+          name: terraform-plan
+          path: ${{ github.workspace }}    
 
       - name: Terraform Init
         run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
