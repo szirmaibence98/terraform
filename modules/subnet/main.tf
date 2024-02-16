@@ -5,6 +5,5 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
   address_prefixes     = each.value.address_prefixes
-  network_security_group_id = each.value.nsg_id 
-  // Depending on your requirements, you might also want to include service endpoints or delegation here.
+  network_security_group_id = each.value.nsg_id // This should be valid
 }
