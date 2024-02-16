@@ -42,7 +42,7 @@ module "nsg" {
   source              = "./modules/nsg"
   nsg_name            = "myCustomNSG"
   location            = "eastus"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.name
   security_rules      = [
     {
       name                       = "allow-http"
@@ -74,12 +74,13 @@ module "nsg" {
 
 
 
-
 module "network_watcher" {
   source              = "./modules/network_watcher"
-  location            = var.location
+  network_watcher_name = "customNetworkWatcherName"
+  location            = "eastus"
   resource_group_name = module.resource_group.name
 }
+
 
 module "nsg_flow_logs" {
   source               = "./modules/nsg_flow_logs"
