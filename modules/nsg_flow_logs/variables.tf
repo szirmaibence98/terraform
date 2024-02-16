@@ -17,3 +17,18 @@ variable "nsg_ids" {
   type        = list(string)
   description = "A list of Network Security Group IDs to enable flow logs for."
 }
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "The ID of the Log Analytics Workspace for traffic analytics."
+}
+
+variable "location" {
+  type        = string
+  description = "The location where the resources are deployed."
+}
+
+variable "log_analytics_workspace_resource_id" {
+  type        = string
+  description = "The resource ID of the Log Analytics Workspace for traffic analytics."
+}
