@@ -39,3 +39,33 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+
+
+  deploy-to-staging:
+    needs: terraform-plan-and-apply
+    runs-on: ubuntu-latest
+    environment: 
+      name: staging
+      url: ${{ steps.deploy.outputs.staging-url }}
+    steps:
+      - name: Deploy to Staging
+        run: echo "Deploying to Staging"
+        # You can replace this echo command with your actual deployment command
+        # For example, terraform apply -auto-approve could go here, tailored to your staging environment
+
+  deploy-to-production:
+    needs: deploy-to-staging
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url: ${{ steps.deploy.outputs.production-url }}
+    steps:
+      - name: Deploy to Production
+        run: echo "Deploying to Production"
+        # Similar to the staging job, replace this echo command with your actual deployment command
+        # This ensures deployment to production occurs only after staging deployment and manual approvals are complete
+
+
+
+
