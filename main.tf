@@ -88,11 +88,14 @@ module "nsg_flow_logs" {
   network_watcher_name = module.network_watcher.network_watcher_name
   resource_group_name  = module.resource_group.name
   storage_account_id   = module.storage_account.storage_account_id
-  nsg_ids              = [module.nsg.nsg_id] // Ensure this references the correct NSG module output
+  nsg_ids              = {
+    "nsg1" = module.nsg.nsg_id
+  }
   log_analytics_workspace_id      = module.log_analytics_workspace.workspace_id
-  location             = var.location
-  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id // Verify correct output variable name
+  location                        = var.location
+  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id
 }
+
 
 
 

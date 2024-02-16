@@ -14,8 +14,8 @@ variable "storage_account_id" {
 }
 
 variable "nsg_ids" {
-  type        = list(string)
-  description = "A list of Network Security Group IDs to enable flow logs for."
+  type = map(string)
+  description = "A map of NSG names to Network Security Group IDs to enable flow logs for."
 }
 
 variable "log_analytics_workspace_id" {
