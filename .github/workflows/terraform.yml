@@ -83,5 +83,4 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -var-file=${{ env.TF_ENV }}.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
-        env:
-          ARM_SKIP_PROVIDER_REGISTRATION: "true"
+
