@@ -8,7 +8,6 @@ on:
     branches:
       - main
 
-
 env:
   TF_ENV: dev
 
@@ -39,8 +38,7 @@ jobs:
         terraform init \
           -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
           -backend-config="container_name=statefiles" \
-          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate" \
-          -var="tenant_id: '${{ env.ARM_TENANT_ID }}'"
+          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Set Plan File Name
       id: set-plan-file
@@ -59,7 +57,7 @@ jobs:
     name: 'Terraform Apply'
     needs: terraform-plan
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Ensure apply only runs on push to main branch
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -80,8 +78,7 @@ jobs:
         terraform init \
           -backend-config="access_key=${{ secrets.ARM_ACCESS_KEY }}" \
           -backend-config="container_name=statefiles" \
-          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate" \
-          -var="tenant_id: '${{ env.ARM_TENANT_ID }}'"
+          -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
       run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
