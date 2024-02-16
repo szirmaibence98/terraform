@@ -45,10 +45,25 @@ jobs:
           name: terraform-plan
           path: ${{ env.TF_ENV }}.tfplan
 
+  manual_approval:
+    name: Manual Approval
+    needs: terraform_plan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Download Terraform Plan Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: terraform-plan
+          path: tfplan
+
+      - name: Wait for Approval
+        id: approval
+        uses: tzkhan/awaiting-approval@v1
 
   terraform_apply:
     name: 'Terraform Apply'
-    needs: terraform_plan
+    needs: manual_approval
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -84,17 +99,7 @@ jobs:
           terraform apply -auto-approve "${{ env.TF_ENV }}.tfplan"
 
 
-      - name: Manual Approval
-        if: always() && github.event_name == 'push' # Only run on push events
-        uses: peter-evans/wait-action@v2
-        with:
-          timeout: 5m
-          message: "Please review changes and approve this deployment."
-  
-      - name: Check if Manual Approval is Granted
-        if: steps.manual_approval.outputs.approved == 'false'
-        run: |
-          echo "Manual approval not granted, skipping Terraform apply."      
+ 
 
   terraform_destroy:
     name: 'Terraform Destroy'
