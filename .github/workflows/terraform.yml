@@ -84,19 +84,17 @@ jobs:
           terraform apply -auto-approve "${{ env.TF_ENV }}.tfplan"
 
 
-
       - name: Manual Approval
-        if: always() # This step always runs, but the next steps will only run if manual approval is given
-        uses: tzkhan/awaiting-approval@v1
-        id: manual_approval
+        if: always() && github.event_name == 'push' # Only run on push events
+        uses: peter-evans/wait-action@v2
         with:
-          message: 'Please approve the changes to proceed with Terraform apply'
-          wait: true
+          timeout: 5m
+          message: "Please review changes and approve this deployment."
   
       - name: Check if Manual Approval is Granted
         if: steps.manual_approval.outputs.approved == 'false'
         run: |
-          echo "Manual approval not granted, skipping Terraform apply."        
+          echo "Manual approval not granted, skipping Terraform apply."      
 
   terraform_destroy:
     name: 'Terraform Destroy'
