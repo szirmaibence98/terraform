@@ -1,26 +1,19 @@
-name: 'Terraform Azure'
+name: 'Terraform Deployment'
 
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   terraform:
-    name: 'Terraform'
     runs-on: ubuntu-latest
-
-    # Environment variables
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }} 
-
+    strategy:
+      matrix:
+        environment: ['dev', 'prod']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -31,14 +24,21 @@ jobs:
         terraform_version: latest
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -backend-config="key=${{ matrix.environment }}-terraform.tfstate"
+      env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCOUNT_ACCESS_KEY }}
 
     - name: Terraform Plan
       run: terraform plan
+      env:
+        TF_ENV: ${{ matrix.environment }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
-
-
-
+      env:
+        TF_ENV: ${{ matrix.environment }}
