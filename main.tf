@@ -5,7 +5,6 @@ module "resource_group" {
   tags = {
     Environment = var.environment
   }
-
 }
 
 module "vnet" {
@@ -13,13 +12,15 @@ module "vnet" {
   name                = "myVNet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = module.resource_group.name  
-  tags                = { Environment = "Development" }
+  resource_group_name = module.resource_group.name
+  tags = {
+    Environment = var.environment
+  }
 }
 
 module "subnets" {
   source               = "./modules/subnet"
-  resource_group_name  = module.resource_group.name
+  resource_group_name  = module.resource_group.name  
   virtual_network_name = module.vnet.name
   subnets = [
     {
