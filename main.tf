@@ -91,9 +91,9 @@ module "nsg_flow_logs" {
   nsg_ids              = {
     "nsg1" = module.nsg.nsg_id
   }
-  log_analytics_workspace_id      = module.log_analytics_workspace.workspace_id
-  location                        = var.location
-  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id
+  log_analytics_workspace_id          = module.log_analytics_workspace.workspace_id
+  location                            = var.location
+  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_resource_id
 }
 
 
