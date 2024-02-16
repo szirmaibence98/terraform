@@ -85,8 +85,37 @@ module "network_watcher" {
 
 module "nsg_flow_logs" {
   source               = "./modules/nsg_flow_logs"
-  network_watcher_name = module.network_watcher.network_watcher.name
+  network_watcher_name = module.network_watcher.network_watcher_name
   resource_group_name  = module.resource_group.name
-  storage_account_id   = azurerm_storage_account.example.id
-  nsg_ids              = [azurerm_network_security_group.example.id]
+  storage_account_id   = module.storage_account.storage_account_id
+  nsg_ids              = [module.nsg.nsg_id] // Ensure this references the correct NSG module output
+  log_analytics_workspace_id      = module.log_analytics_workspace.workspace_id
+  location             = var.location
+  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id // Verify correct output variable name
+}
+
+
+
+
+module "storage_account" {
+  source              = "./modules/storage_account"
+  name                = "mystorageaccountunique"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = "eastus"
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+  tags                = {
+    Environment = "Production"
+  }
+}
+
+module "log_analytics_workspace" {
+  source              = "./modules/log_analytics_workspace"
+  name                = "myloganalyticsworkspace"
+  location            = "eastus"
+  resource_group_name = azurerm_resource_group.example.name
+  sku                 = "PerGB2018"
+  tags                = {
+    Environment = "Production"
+  }
 }
