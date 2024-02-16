@@ -79,8 +79,6 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          ls -al
-          echo "Plan file: ${{ env.TF_ENV }}.tfplan"
           terraform apply -auto-approve "${{ env.TF_ENV }}.tfplan"
 
 

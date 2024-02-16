@@ -73,4 +73,4 @@ jobs:
         run: terraform init -backend-config="key=${{ env.TF_ENV }}.terraform.tfstate"
 
       - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve "${{ env.TF_ENV }}.tfplan"
