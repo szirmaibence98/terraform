@@ -35,7 +35,7 @@ jobs:
         terraform_version: latest
 
 
-        
+
     - name: Terraform Init with Dynamic Backend Config
       run: |
         terraform init \
@@ -84,5 +84,5 @@ jobs:
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
-      run: terraform apply -var-file=${{ env.TF_ENV }}.tfvar "planfile-${{ env.TF_ENV }}.tfplan"
+      run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
 
