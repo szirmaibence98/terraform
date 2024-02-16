@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 0.12"  // Adjust this as necessary for your Terraform CLI version requirement
+  required_version = ">= 1.0.8"  // Adjust this as necessary for your Terraform CLI version requirement
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.30"  // Correct way to specify the AzureRM provider version
+      version = "~> 3.92.0"
     }
   }
 
