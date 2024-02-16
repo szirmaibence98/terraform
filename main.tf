@@ -77,7 +77,7 @@ module "nsg" {
 
 module "network_watcher" {
   source              = "./modules/network_watcher"
-  network_watcher_name = "customNetworkWatcherName"
+  name = "customNetworkWatcherName"
   location            = var.location
   resource_group_name = module.resource_group.name
 }

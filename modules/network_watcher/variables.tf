@@ -1,4 +1,4 @@
-variable "network_watcher_name" {
+variable "name" {
   type        = string
   description = "The name of the Network Watcher instance."
 }
