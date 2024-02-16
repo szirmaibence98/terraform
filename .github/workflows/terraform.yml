@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  TF_ENV: staging # Define your environment here. This can be dynamically set based on the branch, etc., if needed.
+
 jobs:
   terraform-plan:
     name: 'Terraform Plan'
@@ -20,7 +23,6 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-      TF_ENV: staging # This can be dynamically set or changed as needed
 
     steps:
     - name: Checkout code
@@ -40,20 +42,31 @@ jobs:
 
     - name: Set Plan File Name
       id: set-plan-file
-      run: echo "::set-output name=plan-file::planfile-${{ env.TF_ENV }}.tfplan"
+      run: echo "plan-file=planfile-${{ env.TF_ENV }}.tfplan" >> $GITHUB_OUTPUT
 
     - name: Terraform Plan
       run: terraform plan -out=${{ steps.set-plan-file.outputs.plan-file }}
+
+    - name: Upload Terraform Plan as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-plan-${{ env.TF_ENV }}
+        path: ${{ steps.set-plan-file.outputs.plan-file }}
 
   terraform-apply:
     name: 'Terraform Apply'
     needs: terraform-plan
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ needs.terraform-plan.outputs.TF_ENV }}
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Ensure apply only runs on push to main branch
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v2
+      with:
+        name: terraform-plan-${{ env.TF_ENV }}
+        path: .
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -68,4 +81,4 @@ jobs:
           -backend-config="key=${{ env.TF_ENV }}-terraform.tfstate"
 
     - name: Terraform Apply
-      run: terraform apply "${{ needs.terraform-plan.outputs.plan-file }}"
+      run: terraform apply "planfile-${{ env.TF_ENV }}.tfplan"
