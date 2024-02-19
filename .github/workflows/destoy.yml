@@ -1,12 +1,12 @@
 name: 'Terraform Destroy'
 
-on:
-  push:
-    branches:
-      - main # Adjust this as needed for your workflow
-  pull_request:
-    branches:
-      - main # Adjust this as needed for your workflow
+##on:
+#  push:
+#    branches:
+#      - main # Adjust this as needed for your workflow
+#  pull_request:
+#    branches:
+#      - main # Adjust this as needed for your workflow
   workflow_dispatch: # Add this line to enable manual triggering
 
 jobs:
