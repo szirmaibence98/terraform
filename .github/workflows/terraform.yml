@@ -20,7 +20,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform-plan:
+  terraform:
+    name: 'Terraform'
     uses: szirmaibence98/templates/.github/workflows/terraform.yml@main
     with:
       environment_name: 'dev'
