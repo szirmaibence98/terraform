@@ -24,8 +24,4 @@ jobs:
     uses: szirmaibence98/templates/.github/workflows/terrafrom-plan.yml@main
     with:
       environment_name: 'dev'
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-      arm_access_key: ${{ secrets.ARM_ACCESS_KEY }}
+
