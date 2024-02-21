@@ -21,7 +21,7 @@ on:
 
 jobs:
   terraform-plan:
-    uses: szirmaibence98/templates/.github/workflows/terrafrom-plan.yml@main
+    uses: szirmaibence98/templates/.github/workflows/terraform-plan.yml@main
     with:
       environment_name: 'dev'
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
