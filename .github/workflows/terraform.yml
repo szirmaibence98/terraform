@@ -24,3 +24,5 @@ jobs:
     uses: szirmaibence98/templates/.github/workflows/terraform-plan.yml@main
     with:
       environment_name: 'dev'
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
