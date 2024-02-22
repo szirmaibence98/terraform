@@ -143,7 +143,7 @@ module "network_interface" {
   source                = "./modules/network_interface"
   resource_group_name   = module.resource_group.name
   location              = var.location
-  subnet_id             = module.subnets.subnet1_id  # Ensure this matches the output from your subnet module
+  subnet_id             = module.subnets.subnet_ids["subnet1"]
   network_interface_name = "myLinuxVMNic"
   tags                  = {
     Environment = var.environment
