@@ -45,13 +45,24 @@ module "nsg" {
   resource_group_name = module.resource_group.name
   security_rules      = [
     {
-      name                       = "allow-http"
+      name                       = "allow-ssh"
       priority                   = 100
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
       destination_port_range     = "22"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "allow-http"
+      priority                   = 100
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
       source_address_prefix      = "*"
       destination_address_prefix = "*"
     },
@@ -93,7 +104,7 @@ module "nsg_flow_logs" {
   }
   log_analytics_workspace_id          = module.log_analytics_workspace.workspace_id
   location                            = var.location
-  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_resource_id
+  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id
 }
 
 
@@ -122,3 +133,37 @@ module "log_analytics_workspace" {
     Environment = var.environment
   }
 }
+
+
+
+
+
+module "linux_vm" {
+  source = "./modules/linux_vm"  # Update this path to where your Linux VM module is located
+  
+  resource_group_name  = module.resource_group.name
+  location             = var.location
+  vm_name              = "myLinuxVM"
+  vm_size              = "Standard_B1ls"  # Example VM size, adjust as needed
+  admin_username       = "adminuser"
+  admin_password       = "SecurePassword123!"  # Ensure to use a secure method for passwords
+  network_interface_id = module.network_interface.id  # Ensure you have a module/output for this
+  
+  # Assuming you have a Log Analytics Workspace configured
+  log_analytics_workspace_id = module.log_analytics_workspace.workspace_id
+}
+
+
+module "vm_logging" {
+  source                      = "./modules/monitor_diagnostic_setting"
+  target_resource_id          = module.linux_vm.vm_id
+  log_analytics_workspace_id  = module.log_analytics_workspace.workspace_id
+  logs_to_enable              = [
+    { category = "AuditLogs", enabled = true },
+    { category = "SignInLogs", enabled = true }
+  ]
+  metrics_to_enable           = [
+    { category = "AllMetrics", enabled = true }
+  ]
+}
+
