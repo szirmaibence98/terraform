@@ -57,7 +57,7 @@ module "nsg" {
     },
     {
       name                       = "allow-http"
-      priority                   = 100
+      priority                   = 110
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
@@ -68,7 +68,7 @@ module "nsg" {
     },
     {
       name                       = "allow-https"
-      priority                   = 110
+      priority                   = 120
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
