@@ -32,7 +32,7 @@ module "subnets" {
     {
       name             = "subnet2"
       address_prefixes = ["10.0.2.0/24"]
-      nsg_id           = null // Explicitly set to null if needed
+      nsg_id           = null 
     }
   ]
 }
