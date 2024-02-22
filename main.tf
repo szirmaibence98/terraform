@@ -28,7 +28,7 @@ module "subnets" {
     {
       name                 = "subnet1"
       address_prefixes     = ["10.0.1.0/24"]
-      nsg_id               = "nsg-id-here"  # or null if not used
+      nsg_id               = module.nsg.name
       delegate_to_service  = true
       service_delegation_type = "Microsoft.ContainerInstance/containerGroups"
     },
