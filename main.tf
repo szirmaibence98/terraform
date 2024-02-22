@@ -176,11 +176,9 @@ module "vm_logging" {
   resource_name               = module.linux_vm.vm_name
   target_resource_id          = module.linux_vm.vm_id
   log_analytics_workspace_id  = module.log_analytics_workspace.workspace_resource_id
-  logs_to_enable              = [
-    { category = "AuditLogs", enabled = true },
-    { category = "SignInLogs", enabled = true }
-  ]
+  logs_to_enable              = []  # Adjust based on supported categories or leave empty if unsure
   metrics_to_enable           = [
     { category = "AllMetrics", enabled = true }
   ]
 }
+
