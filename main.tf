@@ -104,7 +104,7 @@ module "nsg_flow_logs" {
   }
   log_analytics_workspace_id          = module.log_analytics_workspace.workspace_id
   location                            = var.location
-  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_id
+  log_analytics_workspace_resource_id = module.log_analytics_workspace.workspace_resource_id
 }
 
 
@@ -138,7 +138,6 @@ module "log_analytics_workspace" {
 
 
 
-
 module "network_interface" {
   source                = "./modules/network_interface"
   resource_group_name   = module.resource_group.name
@@ -161,7 +160,7 @@ module "linux_vm" {
   admin_password         = "SecurePassword123!"
   network_interface_id   = module.network_interface.id
   
-  log_analytics_workspace_id = module.log_analytics_workspace.workspace_id
+  log_analytics_workspace_id = module.log_analytics_workspace.workspace_resource_id
 }
 
 
