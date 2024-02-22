@@ -137,22 +137,18 @@ module "log_analytics_workspace" {
 
 
 
-
 module "linux_vm" {
-  source = "./modules/linux_vm"  # Update this path to where your Linux VM module is located
+  source = "./modules/linux_vm"
   
-  resource_group_name  = module.resource_group.name
-  location             = var.location
-  vm_name              = "myLinuxVM"
-  vm_size              = "Standard_B1ls"  # Example VM size, adjust as needed
-  admin_username       = "adminuser"
-  admin_password       = "SecurePassword123!"  # Ensure to use a secure method for passwords
-  network_interface_id = module.network_interface.id  # Ensure you have a module/output for this
-  
-  # Assuming you have a Log Analytics Workspace configured
-  log_analytics_workspace_id = module.log_analytics_workspace.workspace_id
+  # VM configuration variables
+  vm_name               = "myLinuxVM"
+  resource_group_name   = module.resource_group.name
+  location              = var.location
+  vm_size               = "Standard_B1ls"
+  admin_username        = "adminuser"
+  admin_password        = "SecurePassword123!"
+  network_interface_id  = module.network_interface.id
 }
-
 
 module "vm_logging" {
   source                      = "./modules/monitor_diagnostic_setting"
@@ -166,4 +162,3 @@ module "vm_logging" {
     { category = "AllMetrics", enabled = true }
   ]
 }
-

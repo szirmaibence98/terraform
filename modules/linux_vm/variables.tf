@@ -27,3 +27,8 @@ variable "admin_password" {
 variable "network_interface_id" {
   description = "The ID of the network interface to attach to the VM"
 }
+
+variable "log_analytics_workspace_id" {
+  description = "The ID of the Log Analytics Workspace for diagnostic settings."
+  type        = string
+}
