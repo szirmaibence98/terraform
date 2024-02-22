@@ -19,6 +19,7 @@ module "vnet" {
   }
 }
 
+
 module "subnets" {
   source               = "./modules/subnet"
   resource_group_name  = module.resource_group.name  
@@ -40,8 +41,6 @@ module "subnets" {
       service_delegation_type = "" 
     }
   ]
-
-
 
 }
 
