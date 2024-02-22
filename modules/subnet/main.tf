@@ -6,9 +6,11 @@ resource "azurerm_subnet" "subnet" {
   virtual_network_name = var.virtual_network_name
   address_prefixes     = each.value.address_prefixes
 
-  if each.value.delegate_to_service {
-    delegation {
-      name = "aciDelegation"
+  dynamic "delegation" {
+    for_each = each.value.delegate_to_service ? [each.value] : []
+    content {
+      name = "delegation"
+
       service_delegation {
         name    = each.value.service_delegation_type
         actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
