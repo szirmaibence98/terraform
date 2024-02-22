@@ -148,6 +148,7 @@ module "linux_vm" {
   admin_username        = "adminuser"
   admin_password        = "SecurePassword123!"
   network_interface_id  = module.network_interface.id
+  log_analytics_workspace_id = module.log_analytics_workspace.workspace_id
 }
 
 module "vm_logging" {

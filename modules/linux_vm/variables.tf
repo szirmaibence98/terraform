@@ -29,6 +29,7 @@ variable "network_interface_id" {
 }
 
 variable "log_analytics_workspace_id" {
-  description = "The ID of the Log Analytics Workspace for diagnostic settings."
+  description = "Optional: The ID of the Log Analytics Workspace for diagnostics settings."
   type        = string
+  default     = "" # Make it optional
 }
