@@ -10,10 +10,12 @@ variable "virtual_network_name" {
 
 
 variable "subnets" {
-  description = "A list of subnets and their properties"
+  description = "A list of subnet configurations."
   type = list(object({
-    name             = string
-    address_prefixes = list(string)
-    nsg_id           = optional(string) // Make nsg_id optional
+    name                 = string
+    address_prefixes     = list(string)
+    nsg_id               = optional(string)
+    delegate_to_service  = bool
+    service_delegation_type = string
   }))
 }
