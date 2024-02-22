@@ -167,7 +167,7 @@ module "linux_vm" {
 module "vm_logging" {
   source                      = "./modules/monitor_diagnostic_setting"
   target_resource_id          = module.linux_vm.vm_id
-  log_analytics_workspace_id  = module.log_analytics_workspace.workspace_id
+  log_analytics_workspace_id  = module.log_analytics_workspace.workspace_resource_id
   logs_to_enable              = [
     { category = "AuditLogs", enabled = true },
     { category = "SignInLogs", enabled = true }
