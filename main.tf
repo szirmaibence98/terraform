@@ -23,18 +23,26 @@ module "subnets" {
   source               = "./modules/subnet"
   resource_group_name  = module.resource_group.name  
   virtual_network_name = module.vnet.name
+
   subnets = [
     {
-      name             = "subnet1"
-      address_prefixes = ["10.0.1.0/24"]
-      nsg_id           = module.nsg.nsg_id
+      name                 = "subnet1"
+      address_prefixes     = ["10.0.1.0/24"]
+      nsg_id               = "nsg-id-here"  # or null if not used
+      delegate_to_service  = true
+      service_delegation_type = "Microsoft.ContainerInstance/containerGroups"
     },
     {
-      name             = "subnet2"
-      address_prefixes = ["10.0.2.0/24"]
-      nsg_id           = null 
+      name                 = "subnet2"
+      address_prefixes     = ["10.0.2.0/24"]
+      nsg_id               = null
+      delegate_to_service  = false
+      service_delegation_type = "" 
     }
   ]
+
+
+
 }
 
 

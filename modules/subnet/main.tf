@@ -7,13 +7,14 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = each.value.address_prefixes
 
   dynamic "delegation" {
-    for_each = each.value.nsg_id != null ? [1] : []
+    for_each = each.value.delegate_to_service ? [each.value.service_delegation_type] : []
     content {
       name = "delegation"
       service_delegation {
-        name = "Microsoft.ContainerInstance/containerGroups"
+        name    = delegation.key  # Use the type from the dynamic block key
         actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
       }
     }
   }
 }
+

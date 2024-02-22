@@ -25,3 +25,8 @@ variable "metrics_to_enable" {
   }))
   default     = []
 }
+
+variable "resource_name" {
+  description = "The name of the target resource for diagnostic settings."
+  type        = string
+}
