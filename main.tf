@@ -137,19 +137,33 @@ module "log_analytics_workspace" {
 
 
 
+
+
+module "network_interface" {
+  source                = "./modules/network_interface"
+  resource_group_name   = module.resource_group.name
+  location              = var.location
+  subnet_id             = module.subnets.subnet1_id  # Ensure this matches the output from your subnet module
+  network_interface_name = "myLinuxVMNic"
+  tags                  = {
+    Environment = var.environment
+  }
+}
+
 module "linux_vm" {
   source = "./modules/linux_vm"
   
-  # VM configuration variables
-  vm_name               = "myLinuxVM"
-  resource_group_name   = module.resource_group.name
-  location              = var.location
-  vm_size               = "Standard_B1ls"
-  admin_username        = "adminuser"
-  admin_password        = "SecurePassword123!"
-  network_interface_id  = module.network_interface.id
+  resource_group_name    = module.resource_group.name
+  location               = var.location
+  vm_name                = "myLinuxVM"
+  vm_size                = "Standard_B1ls"
+  admin_username         = "adminuser"
+  admin_password         = "SecurePassword123!"
+  network_interface_id   = module.network_interface.id
+  
   log_analytics_workspace_id = module.log_analytics_workspace.workspace_id
 }
+
 
 module "vm_logging" {
   source                      = "./modules/monitor_diagnostic_setting"
