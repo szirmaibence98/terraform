@@ -36,15 +36,3 @@ variable "agent_count" {
 }
 
 
-
-variable "annotations_allowed" {
-  description = "List of annotations to be captured for AKS monitoring."
-  type        = string
-  default     = null
-}
-
-variable "labels_allowed" {
-  description = "List of labels to be captured for AKS monitoring."
-  type        = string
-  default     = null
-}
