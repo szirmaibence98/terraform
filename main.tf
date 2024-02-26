@@ -162,7 +162,7 @@ module "linux_vm" {
   resource_group_name    = module.resource_group.name
   location               = var.location
   vm_name                = "myLinuxVM"
-  vm_size                = "Standard_B1ls"
+  vm_size                = "Standard_B1"
   admin_username         = "adminuser"
   admin_password         = "SecurePassword123!"
   network_interface_id   = module.network_interface.id
@@ -202,13 +202,23 @@ module "aks" {
 module "monitor_workspace" {
   source              = "./modules/monitor_workspace"
   monitor_workspace_name = "example-workspace"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = module.resource_group.name
+  location            = var.location
 }
 
 module "data_collection_endpoint" {
   source              = "./modules/data_collection_endpoint"
   cluster_name        = "yourClusterName"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = module.resource_group.name
+  location            = var.location
+}
+
+module "data_collection_rule" {
+  source                   = "./modules/data_collection_rule"
+  name_prefix              = "MSProm"
+  resource_group_name      = module.resource_group.name
+  location                 = var.location
+  data_collection_endpoint_id = module.data_collection_endpoint.endpoint_id
+  monitor_workspace_id     = module.monitor_workspace.workspace_id
+  cluster_name             = module.cluster_module.cluster_name
 }
