@@ -194,5 +194,5 @@ module "aks" {
   dns_prefix          = var.dns_prefix
   agent_count         = var.agent_count
   annotations_allowed = var.annotations_allowed
-  annotations_allowed = var.labels_allowed
+  labels_allowed      = var.labels_allowed
 }
