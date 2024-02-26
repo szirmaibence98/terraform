@@ -193,6 +193,6 @@ module "aks" {
   resource_group_name = module.resource_group.name
   dns_prefix          = var.dns_prefix
   agent_count         = var.agent_count
-#  annotations_allowed = var.annotations_allowed
-#  labels_allowed      = var.labels_allowed
+  annotations_allowed = var.annotations_allowed
+  labels_allowed      = var.labels_allowed
 }
