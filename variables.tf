@@ -36,14 +36,15 @@ variable "agent_count" {
 }
 
 
-variable "metric_annotations_allowlist" {
-  description = "List of allowed annotations"
-  type        = list(string)
-  default     = ["annotation1", "annotation2"] # Example values
+
+variable "annotations_allowed" {
+  description = "List of annotations to be captured for AKS monitoring."
+  type        = string
+  default     = null
 }
 
-variable "metric_labels_allowlist" {
-  description = "List of allowed labels"
-  type        = list(string)
-  default     = ["label1", "label2"] # Example values
+variable "labels_allowed" {
+  description = "List of labels to be captured for AKS monitoring."
+  type        = string
+  default     = null
 }

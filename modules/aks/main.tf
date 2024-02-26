@@ -15,9 +15,12 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     node_count = var.agent_count
   }
 
+
   monitor_metrics {
-    annotations_allowed = var.metric_annotations_allowlist
-    labels_allowed      = var.metric_labels_allowlist
+    annotations_allowed = var.annotations_allowed
+    labels_allowed      = var.labels_allowed
+#    annotations_allowed = null
+#    labels_allowed      = null
   }
 
   network_profile {
