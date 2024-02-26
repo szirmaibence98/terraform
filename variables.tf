@@ -15,3 +15,32 @@ variable "environment" {
   type        = string
 }
 
+
+
+
+# AKS
+
+variable "cluster_name" {
+  description = "The name of the AKS cluster"
+  type        = string
+}
+
+variable "dns_prefix" {
+  description = "DNS prefix for the AKS cluster"
+  type        = string
+}
+
+variable "agent_count" {
+  description = "The number of agent nodes for the AKS cluster"
+  type        = number
+}
+
+variable "metric_annotations_allowlist" {
+  description = "List of metric annotations allowed"
+  type        = list(string)
+}
+
+variable "metric_labels_allowlist" {
+  description = "List of metric labels allowed"
+  type        = list(string)
+}
