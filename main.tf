@@ -186,8 +186,8 @@ module "vm_logging" {
 
 
 
-module "aks_cluster" {
-  source              = "./modules/aks_cluster"
+module "aks" {
+  source              = "./modules/aks"
   cluster_name        = var.cluster_name
   location            = var.location
   resource_group_name = module.resource_group.name
