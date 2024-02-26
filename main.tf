@@ -172,7 +172,7 @@ module "linux_vm" {
 
 
 module "vm_logging" {
-  source                      = "./modules/monitor_diagnostic_setting"
+  source                      = "./modules/diagnostic_setting"
   resource_name               = module.linux_vm.vm_name
   target_resource_id          = module.linux_vm.vm_id
   log_analytics_workspace_id  = module.log_analytics_workspace.workspace_resource_id
