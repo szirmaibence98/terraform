@@ -182,3 +182,17 @@ module "vm_logging" {
   ]
 }
 
+
+
+
+
+module "aks_cluster" {
+  source              = "./modules/aks_cluster"
+  cluster_name        = var.cluster_name
+  location            = var.location
+  resource_group_name = module.resource_group.name
+  dns_prefix          = var.dns_prefix
+  agent_count         = var.agent_count
+  metric_annotations_allowlist = var.metric_annotations_allowlist
+  metric_labels_allowlist      = var.metric_labels_allowlist
+}
