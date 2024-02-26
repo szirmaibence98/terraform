@@ -162,7 +162,7 @@ module "linux_vm" {
   resource_group_name    = module.resource_group.name
   location               = var.location
   vm_name                = "myLinuxVM"
-  vm_size                = "Standard_B1"
+  vm_size                = "Standard_B1s"
   admin_username         = "adminuser"
   admin_password         = "SecurePassword123!"
   network_interface_id   = module.network_interface.id
