@@ -35,4 +35,12 @@ variable "agent_count" {
   type        = number
 }
 
+variable "annotations_allowed" {
+  description = "List of annotations to be captured for AKS monitoring."
+  type        = string
+}
 
+variable "labels_allowed" {
+  description = "List of labels to be captured for AKS monitoring."
+  type        = string
+}
