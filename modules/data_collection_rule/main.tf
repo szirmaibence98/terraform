@@ -1,5 +1,5 @@
 resource "azurerm_monitor_data_collection_rule" "dcr" {
-  name                        = "${var.name_prefix}-${var.location}-${var.cluster_name}"
+  name                        = "${var.name_prefix}-${var.cluster_name}"
   resource_group_name         = var.resource_group_name
   location                    = var.location
   data_collection_endpoint_id = var.data_collection_endpoint_id
