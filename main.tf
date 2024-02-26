@@ -213,12 +213,13 @@ module "data_collection_endpoint" {
   location            = var.location
 }
 
+
 module "data_collection_rule" {
-  source                   = "./modules/data_collection_rule"
-  name_prefix              = "MSProm"
-  resource_group_name      = module.resource_group.name
-  location                 = var.location
-  data_collection_endpoint_id = module.data_collection_endpoint.endpoint_id
-  monitor_workspace_id     = module.monitor_workspace.workspace_id
-  cluster_name             = module.cluster_module.cluster_name
+  source                       = "./modules/data_collection_rule"
+  name_prefix                  = "MSProm"
+  resource_group_name          = module.resource_group.name
+  location                     = var.location
+  data_collection_endpoint_id  = module.data_collection_endpoint.endpoint_id
+  monitor_workspace_id         = module.monitor_workspace.workspace_id
+  cluster_name                 = module.aks.cluster_name
 }
