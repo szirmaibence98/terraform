@@ -17,10 +17,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
 
   monitor_metrics {
-    annotations_allowed = var.annotations_allowed
-    labels_allowed      = var.labels_allowed
-#    annotations_allowed = null
-#    labels_allowed      = null
+#    annotations_allowed = var.annotations_allowed
+#    labels_allowed      = var.labels_allowed
+    annotations_allowed = null
+    labels_allowed      = null
   }
 
   network_profile {
