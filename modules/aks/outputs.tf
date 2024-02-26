@@ -4,5 +4,6 @@ output "cluster_id" {
 }
 
 output "cluster_name" {
-  value = azurerm_kubernetes_cluster.k8s.cluster_name
+  description = "The name of the AKS cluster."
+  value       = var.cluster_name
 }
