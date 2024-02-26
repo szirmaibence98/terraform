@@ -196,3 +196,19 @@ module "aks" {
   annotations_allowed = var.annotations_allowed
   labels_allowed      = var.labels_allowed
 }
+
+
+
+module "monitor_workspace" {
+  source              = "./modules/monitor_workspace"
+  monitor_workspace_name = "example-workspace"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
+
+module "data_collection_endpoint" {
+  source              = "./modules/data_collection_endpoint"
+  cluster_name        = "yourClusterName"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
