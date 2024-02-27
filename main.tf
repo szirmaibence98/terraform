@@ -312,7 +312,7 @@ module "azure_grafana" {
 }
 
 module "grafana_role_assignment" {
-  source                   = "./modules/azure_role_assignment"
+  source                   = "./modules/role_assignment"
   scope                    = module.monitor_workspace.workspace_id
   role_definition_name_or_id = "/subscriptions/${split("/", module.monitor_workspace.workspace_id)[2]}/providers/Microsoft.Authorization/roleDefinitions/b0d8363b-8ddd-447d-831f-62ca05bff136"
   principal_id             = module.grafana.principal_id 
