@@ -312,17 +312,19 @@ module "grafana" {
 }
 
 module "grafana_role_assignment" {
-  source                   = "./modules/role_assignment"
-  scope                    = module.monitor_workspace.workspace_id
-  role_definition_name_or_id = "/subscriptions/${split("/", module.monitor_workspace.workspace_id)[2]}/providers/Microsoft.Authorization/roleDefinitions/b0d8363b-8ddd-447d-831f-62ca05bff136"
-  principal_id             = module.grafana.principal_id 
+  source                      = "./modules/role_assignment"
+  scope                       = module.monitor_workspace.workspace_id
+  role_definition_name_or_id  = "Monitoring Reader"
+  principal_id                = module.grafana.principal_id 
+}
+
+module "grafana_role_assignment_admins" {
+  source                      = "./modules/role_assignment"
+  scope                       = module.monitor_workspace.workspace_id
+  role_definition_name_or_id  = "Grafana Admin"
+  principal_id                = 592ce1c9-046b-45a7-ae5f-07b565cec71c
 }
 
 
 
 
-resource "azurerm_role_assignment" "user_metric_read" {
-  scope              = "/subscriptions/63188410-e84c-40cc-872b-3e062ddc2841/resourceGroups/daimler/providers/Microsoft.Monitor/accounts/example-workspace"
-  role_definition_name = "Reader"
-  principal_id       = "a5100467-fa6f-4afe-9f24-9f0efc05d99a"
-}

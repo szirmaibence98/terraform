@@ -11,3 +11,5 @@ resource "azurerm_dashboard_grafana" "grafana" {
     resource_id = var.azure_monitor_workspace_id
   }
 }
+
+
