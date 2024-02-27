@@ -156,31 +156,29 @@ module "network_interface" {
   }
 }
 
-module "linux_vm" {
-  source = "./modules/linux_vm"
-  
-  resource_group_name    = module.resource_group.name
-  location               = var.location
-  vm_name                = "myLinuxVM"
-  vm_size                = "Standard_B1s"
-  admin_username         = "adminuser"
-  admin_password         = "SecurePassword123!"
-  network_interface_id   = module.network_interface.id
-  
-  log_analytics_workspace_id = module.log_analytics_workspace.workspace_resource_id
-}
+#module "linux_vm" {
+#  source = "./modules/linux_vm"
+#  resource_group_name    = module.resource_group.name
+#  location               = var.location
+#  vm_name                = "myLinuxVM"
+#  vm_size                = "Standard_B1s"
+#  admin_username         = "adminuser"
+#  admin_password         = "SecurePassword123!"
+#  network_interface_id   = module.network_interface.id
+#  log_analytics_workspace_id = module.log_analytics_workspace.workspace_resource_id
+#}
 
 
-module "vm_logging" {
-  source                      = "./modules/diagnostic_setting"
-  resource_name               = module.linux_vm.vm_name
-  target_resource_id          = module.linux_vm.vm_id
-  log_analytics_workspace_id  = module.log_analytics_workspace.workspace_resource_id
-  logs_to_enable              = []  # Adjust based on supported categories or leave empty if unsure
-  metrics_to_enable           = [
-    { category = "AllMetrics", enabled = true }
-  ]
-}
+#module "vm_logging" {
+#  source                      = "./modules/diagnostic_setting"
+#  resource_name               = module.linux_vm.vm_name
+#  target_resource_id          = module.linux_vm.vm_id
+#  log_analytics_workspace_id  = module.log_analytics_workspace.workspace_resource_id
+#  logs_to_enable              = []  # Adjust based on supported categories or leave empty if unsure
+#  metrics_to_enable           = [
+#    { category = "AllMetrics", enabled = true }
+#  ]
+#}
 
 
 
