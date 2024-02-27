@@ -303,7 +303,7 @@ module "prometheus_rule_group" {
 
 
 
-module "azure_grafana" {
+module "grafana" {
   source                      = "./modules/grafana"
   grafana_name                = "myGrafanaDashboard"
   resource_group_name         = module.resource_group.name
