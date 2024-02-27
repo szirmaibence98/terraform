@@ -322,7 +322,7 @@ module "grafana_role_assignment_admins" {
   source                      = "./modules/role_assignment"
   scope                       = module.monitor_workspace.workspace_id
   role_definition_name_or_id  = "Grafana Admin"
-  principal_id                = 592ce1c9-046b-45a7-ae5f-07b565cec71c
+  principal_id                = "592ce1c9-046b-45a7-ae5f-07b565cec71c"
 }
 
 
