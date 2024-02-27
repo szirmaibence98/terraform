@@ -223,3 +223,46 @@ module "data_collection_rule" {
   monitor_workspace_id         = module.monitor_workspace.workspace_id
   cluster_name                 = module.aks.cluster_name
 }
+
+
+module "data_collection_rule_association" {
+  source                  = "./modules/data_collection_rule_association"
+  name                    = "MSProm-${var.location}-${var.cluster_name}"
+  target_resource_id      = module.aks.cluster_id
+  data_collection_rule_id = module.data_collection_rule.data_collection_rule_id
+  description             = "Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster."
+}
+
+
+module "prometheus_rule_group" {
+  source                = "./modules/prometheus_rule_group"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
+
+  rules = [
+    {
+      enabled    = true,
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total{job=\"node\",mode=\"idle\"})"
+    },
+    {
+      enabled    = true,
+      record     = "instance:node_cpu_utilisation:rate5m",
+      expression = "1 - avg without (cpu) (sum without (mode) (rate(node_cpu_seconds_total{job=\"node\", mode=~\"idle|iowait|steal\"}[5m])))"
+    }
+    # Add more rules as needed
+  ]
+}
+
+
+
+module "azure_grafana" {
+  source                      = "./modules/grafana"
+  grafana_name                = "myGrafanaDashboard"
+  resource_group_name         = module.resource_group.name
+  grafana_location            = var.location
+  azure_monitor_workspace_id  = module.monitor_workspace.workspace_id
+}
