@@ -234,7 +234,7 @@ module "data_collection_rule_association" {
 
 module "prometheus_rule_group" {
   source                = "./modules/prometheus_rule_group"
-  name:                 = "ruleseta"
+  name                  = "ruleseta"
   cluster_name          = "myCluster"
   location              = var.location
   resource_group_name   = module.resource_group.name
