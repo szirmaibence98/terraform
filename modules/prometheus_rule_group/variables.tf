@@ -1,14 +1,3 @@
-variable "cluster_name" {
-  description = "The name of the cluster"
-  type        = string
-}
-
-variable "rules" {
-  description = "A list of maps defining the alert rules"
-  type        = list(map(string))
-  default     = []
-}
-
 
 variable "cluster_name" {
   type        = string
