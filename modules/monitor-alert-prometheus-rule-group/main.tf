@@ -6,37 +6,41 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
   scopes                = [var.kubernetes_cluster_id]
 
   dynamic "rule" {
-    for_each = var.rules
+    for_each = [for r in var.rules : r if r.record != null]
     content {
       enabled    = rule.value.enabled
       expression = rule.value.expression
+      record     = rule.value.record
+      labels     = rule.value.labels != null ? rule.value.labels : {}
+    }
+  }
+
+  dynamic "rule" {
+    for_each = [for r in var.rules : r if r.alert != null]
+    content {
+      alert      = rule.value.alert
+      enabled    = rule.value.enabled
+      expression = rule.value.expression
+      for        = rule.value.for
+      severity   = rule.value.severity
       labels     = rule.value.labels != null ? rule.value.labels : {}
 
-      # For record rules
-      if rule.value.record != null {
-        record = rule.value.record
+      dynamic "action" {
+        for_each = rule.value.action_group_id != null ? [rule.value] : []
+        content {
+          action_group_id = rule.value.action_group_id
+        }
       }
 
-      # For alert rules
-      if rule.value.alert != null {
-        alert      = rule.value.alert
-        for        = rule.value.for
-        severity   = rule.value.severity
-        dynamic "action" {
-          for_each = rule.value.action_group_id != null ? [1] : []
-          content {
-            action_group_id = rule.value.action_group_id
-          }
+      dynamic "alert_resolution" {
+        for_each = rule.value.auto_resolved != null ? [rule.value] : []
+        content {
+          auto_resolved   = rule.value.auto_resolved
+          time_to_resolve = rule.value.time_to_resolve
         }
-        dynamic "alert_resolution" {
-          for_each = rule.value.auto_resolved != null ? [1] : []
-          content {
-            auto_resolved   = rule.value.auto_resolved
-            time_to_resolve = rule.value.time_to_resolve
-          }
-        }
-        annotations = rule.value.annotations != null ? rule.value.annotations : {}
       }
+
+      annotations = rule.value.annotations != null ? rule.value.annotations : {}
     }
   }
 
