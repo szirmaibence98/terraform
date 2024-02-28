@@ -33,12 +33,13 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
       }
 
       dynamic "alert_resolution" {
-        for_each = rule.value.auto_resolved != null ? [rule.value] : []
-        content {
+      for_each = rule.value.auto_resolved != null ? [rule.value] : []
+      content {
           auto_resolved   = rule.value.auto_resolved
           time_to_resolve = rule.value.time_to_resolve
-        }
       }
+      }
+
 
       annotations = rule.value.annotations != null ? rule.value.annotations : {}
     }
