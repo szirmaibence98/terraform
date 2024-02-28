@@ -261,4 +261,24 @@ module "data_collection_rule_association" {
 
 
 
-
+module "prometheus_rule_group_a" {
+  source                = "./modules/monitor-alert-prometheus-rule-group"
+  name                  = "rulesetaa"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
+  rules = [
+    {
+      enabled    = true,
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total{job=\"node\",mode=\"idle\"})"
+    },
+    {
+      enabled    = true,
+      record     = "instance:node_cpu_utilisation:rate5m",
+      expression = "1 - avg without (cpu) (rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\"}[5m]))"
+    }
+  ]
+}
