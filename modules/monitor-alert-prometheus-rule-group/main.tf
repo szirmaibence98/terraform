@@ -6,42 +6,37 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
   scopes                = [var.kubernetes_cluster_id]
 
   dynamic "rule" {
-   for_each = [for r in var.rules: r if r.record != null]
+    for_each = var.rules
     content {
       enabled    = rule.value.enabled
       expression = rule.value.expression
-      record     = rule.value.record
-      labels     = lookup(rule.value, "labels", {})
-    }
-  }
+      labels     = rule.value.labels != null ? rule.value.labels : {}
 
-
-  dynamic "rule" {
-    for_each = [for r in var.rules: r if r.alert != null]
-    content {
-      alert      = rule.value.alert
-      enabled    = rule.value.enabled
-      expression = rule.value.expression
-      for        = rule.value.for
-      severity   = rule.value.severity
-
-      dynamic "action" {
-        for_each = lookup(rule.value, "action", [])
-        content {
-          action_group_id = action.value.action_group_id
-        }
+      # For record rules
+      if rule.value.record != null {
+        record = rule.value.record
       }
 
-      dynamic "alert_resolution" {
-        for_each = lookup(rule.value, "alert_resolution", [])
-        content {
-          auto_resolved   = alert_resolution.value.auto_resolved
-          time_to_resolve = alert_resolution.value.time_to_resolve
+      # For alert rules
+      if rule.value.alert != null {
+        alert      = rule.value.alert
+        for        = rule.value.for
+        severity   = rule.value.severity
+        dynamic "action" {
+          for_each = rule.value.action_group_id != null ? [1] : []
+          content {
+            action_group_id = rule.value.action_group_id
+          }
         }
+        dynamic "alert_resolution" {
+          for_each = rule.value.auto_resolved != null ? [1] : []
+          content {
+            auto_resolved   = rule.value.auto_resolved
+            time_to_resolve = rule.value.time_to_resolve
+          }
+        }
+        annotations = rule.value.annotations != null ? rule.value.annotations : {}
       }
-
-      annotations = lookup(rule.value, "annotations", {})
-      labels      = lookup(rule.value, "labels", {})
     }
   }
 

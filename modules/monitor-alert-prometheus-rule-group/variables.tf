@@ -30,9 +30,20 @@ variable "kubernetes_cluster_id" {
 
 variable "rules" {
   description = "A list of rule definitions, including both alert and record rules."
-  type        = list(map(any))
-  default     = []
+  type = list(object({
+    enabled    = bool
+    expression = string
+    record     = optional(string)
+    alert      = optional(string)
+    for        = optional(string)
+    severity   = optional(number)
+    action_group_id = optional(string)
+    annotations = optional(map(string))
+    labels      = optional(map(string))
+  }))
+  default = []
 }
+
 
 variable "tags" {
   description = "A mapping of tags to assign to the resource."
