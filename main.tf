@@ -303,13 +303,13 @@ module "prometheus_rule_group" {
 
 
 
-module "grafana" {
-  source                      = "./modules/grafana"
-  grafana_name                = "myGrafanaDashboard"
-  resource_group_name         = module.resource_group.name
-  grafana_location            = var.location
-  azure_monitor_workspace_id  = module.monitor_workspace.workspace_id
-}
+#module "grafana" {
+#  source                      = "./modules/grafana"
+#  grafana_name                = "myGrafanaDashboard"
+#  resource_group_name         = module.resource_group.name
+#  grafana_location            = var.location
+#  azure_monitor_workspace_id  = module.monitor_workspace.workspace_id
+#}
 
 #module "grafana_role_assignment" {
 #  source                      = "./modules/role_assignment"
@@ -328,3 +328,72 @@ module "grafana" {
 
 
 
+module "prometheus_rule_group_a" {
+  source                = "./modules/monitor-alert-prometheus-rule-group"
+  name                  = "rulesetaa"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
+  rules = [
+    {
+      enabled    = true,
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total{job=\"node\",mode=\"idle\"})"
+    },
+    {
+      enabled    = true,
+      record     = "instance:node_cpu_utilisation:rate5m",
+      expression = "1 - avg without (cpu) (rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\"}[5m]))"
+    }
+  ]
+}
+
+module "prometheus_rule_group_b" {
+  source                = "./modules/monitor-alert-prometheus-rule-group"
+  // Other configurations remain the same as above
+  rules = [
+    // Record rule
+    {
+      enabled    = true,
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total)"
+    },
+    // Alert rule
+    {
+      alert      = "HighCPUUsage",
+      enabled    = true,
+      expression = "node_cpu_seconds_total > 100",
+      for        = "5m",
+      severity   = 2,
+      action     = {
+        action_group_id = "action-group-id"
+      },
+      annotations = {
+        summary = "High CPU usage detected"
+      }
+    }
+  ]
+}
+
+module "prometheus_rule_group_c" {
+  source                = "./modules/monitor-alert-prometheus-rule-group"
+  // Other configurations remain the same as above
+  rules = [
+    // Alert rule
+    {
+      alert      = "HighMemoryUsage",
+      enabled    = true,
+      expression = "node_memory_Active > 5000000",
+      for        = "10m",
+      severity   = 1,
+      action     = {
+        action_group_id = "another-action-group-id"
+      },
+      annotations = {
+        summary = "High memory usage detected"
+      }
+    }
+  ]
+}
