@@ -3,7 +3,7 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   cluster_name          = var.cluster_name
-  scopes                = [var.kubernetes_cluster_id]
+  scopes                = [var.workspace_id, var.kubernetes_cluster_id]
 
   dynamic "rule" {
     for_each = [for r in var.rules : r if r.record != null]
