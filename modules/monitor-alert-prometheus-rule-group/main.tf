@@ -6,7 +6,7 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
   scopes                = [var.kubernetes_cluster_id]
 
   dynamic "rule" {
-    for_each = [for r in var.rules: r if can(r.record)]
+   for_each = [for r in var.rules: r if r.record != null]
     content {
       enabled    = rule.value.enabled
       expression = rule.value.expression
@@ -15,8 +15,9 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example" {
     }
   }
 
+
   dynamic "rule" {
-    for_each = [for r in var.rules: r if can(r.alert)]
+    for_each = [for r in var.rules: r if r.alert != null]
     content {
       alert      = rule.value.alert
       enabled    = rule.value.enabled
