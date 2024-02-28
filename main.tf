@@ -303,6 +303,22 @@ module "prometheus_rule_group_b" {
       enabled    = true,
       record     = "instance:node_cpu_utilisation:rate5m",
       expression = "1 - avg without (cpu) (rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\"}[5m]))"
+    },
+    {
+      enabled    = true,
+      record     = null,
+      expression = "node_cpu_seconds_total > 100",
+      alert      = "HighCPUUsage",
+      for        = "5m",
+      severity   = 2,
+      action_group_id = "action-group-id",
+      annotations = {
+        summary = "High CPU usage detected"
+      },
+      labels      = {}
     }
+
+
+
   ]
 }
