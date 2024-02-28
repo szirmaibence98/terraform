@@ -282,3 +282,41 @@ module "prometheus_rule_group_a" {
     }
   ]
 }
+
+
+module "prometheus_rule_group_c" {
+  source                = "./modules/monitor-alert-prometheus-rule-group"
+  name                  = "rulesetac"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
+  rules = [
+    {
+      enabled    = true,
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total)",
+      alert      = null,
+      for        = null,
+      severity   = null,
+      action_group_id = null,
+      annotations = null,
+      labels      = {}
+    },
+    {
+      enabled    = true,
+      record     = null,
+      expression = "node_cpu_seconds_total > 100",
+      alert      = "HighCPUUsage",
+      for        = "5m",
+      severity   = 2,
+      action_group_id = "action-group-id",
+      annotations = {
+        summary = "High CPU usage detected"
+      },
+      labels      = {}
+    }
+  ]
+
+}
