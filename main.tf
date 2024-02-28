@@ -284,9 +284,10 @@ module "prometheus_rule_group_a" {
 }
 
 
-module "prometheus_rule_group_c" {
+
+module "prometheus_rule_group_b" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
-  name                  = "rulesetac"
+  name                  = "rulesetab"
   cluster_name          = "myCluster"
   location              = var.location
   resource_group_name   = module.resource_group.name
@@ -296,27 +297,12 @@ module "prometheus_rule_group_c" {
     {
       enabled    = true,
       record     = "instance:node_num_cpu:sum",
-      expression = "count without (cpu, mode) (node_cpu_seconds_total)",
-      alert      = null,
-      for        = null,
-      severity   = null,
-      action_group_id = null,
-      annotations = null,
-      labels      = {}
+      expression = "count without (cpu, mode) (node_cpu_seconds_total{job=\"node\",mode=\"idle\"})"
     },
     {
       enabled    = true,
-      record     = null,
-      expression = "node_cpu_seconds_total > 100",
-      alert      = "HighCPUUsage",
-      for        = "5m",
-      severity   = 2,
-      action_group_id = "action-group-id",
-      annotations = {
-        summary = "High CPU usage detected"
-      },
-      labels      = {}
+      record     = "instance:node_cpu_utilisation:rate5m",
+      expression = "1 - avg without (cpu) (rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\"}[5m]))"
     }
   ]
-
 }
