@@ -350,37 +350,6 @@ module "prometheus_rule_group_a" {
   ]
 }
 
-module "prometheus_rule_group_b" {
-  source                = "./modules/monitor-alert-prometheus-rule-group"
-  name                  = "rulesetab"
-  cluster_name          = "myCluster"
-  location              = var.location
-  resource_group_name   = module.resource_group.name
-  workspace_id          = module.monitor_workspace.workspace_id
-  kubernetes_cluster_id = module.aks.cluster_id
-  rules = [
-    // Record rule
-    {
-      enabled    = true,
-      record     = "instance:node_num_cpu:sum",
-      expression = "count without (cpu, mode) (node_cpu_seconds_total)"
-    },
-    // Alert rule
-    {
-      alert      = "HighCPUUsage",
-      enabled    = true,
-      expression = "node_cpu_seconds_total > 100",
-      for        = "5m",
-      severity   = 2,
-      action     = {
-        action_group_id = "action-group-id"
-      },
-      annotations = {
-        summary = "High CPU usage detected"
-      }
-    }
-  ]
-}
 
 module "prometheus_rule_group_c" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
@@ -391,19 +360,30 @@ module "prometheus_rule_group_c" {
   workspace_id          = module.monitor_workspace.workspace_id
   kubernetes_cluster_id = module.aks.cluster_id
   rules = [
-    // Alert rule
     {
-      alert      = "HighMemoryUsage",
       enabled    = true,
-      expression = "node_memory_Active > 5000000",
-      for        = "10m",
-      severity   = 1,
-      action     = {
-        action_group_id = "another-action-group-id"
-      },
+      record     = "instance:node_num_cpu:sum",
+      expression = "count without (cpu, mode) (node_cpu_seconds_total)",
+      alert      = null,
+      for        = null,
+      severity   = null,
+      action_group_id = null,
+      annotations = null,
+      labels      = {}
+    },
+    {
+      enabled    = true,
+      record     = null,
+      expression = "node_cpu_seconds_total > 100",
+      alert      = "HighCPUUsage",
+      for        = "5m",
+      severity   = 2,
+      action_group_id = "action-group-id",
       annotations = {
-        summary = "High memory usage detected"
-      }
+        summary = "High CPU usage detected"
+      },
+      labels      = {}
     }
   ]
+
 }
