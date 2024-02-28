@@ -352,7 +352,7 @@ module "prometheus_rule_group_a" {
 
 module "prometheus_rule_group_b" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
-  name                  = "rulesetaa"
+  name                  = "rulesetab"
   cluster_name          = "myCluster"
   location              = var.location
   resource_group_name   = module.resource_group.name
@@ -384,7 +384,7 @@ module "prometheus_rule_group_b" {
 
 module "prometheus_rule_group_c" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
-  name                  = "rulesetaa"
+  name                  = "rulesetac"
   cluster_name          = "myCluster"
   location              = var.location
   resource_group_name   = module.resource_group.name
