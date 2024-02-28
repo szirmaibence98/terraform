@@ -352,7 +352,12 @@ module "prometheus_rule_group_a" {
 
 module "prometheus_rule_group_b" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
-  // Other configurations remain the same as above
+  name                  = "rulesetaa"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
   rules = [
     // Record rule
     {
@@ -379,7 +384,12 @@ module "prometheus_rule_group_b" {
 
 module "prometheus_rule_group_c" {
   source                = "./modules/monitor-alert-prometheus-rule-group"
-  // Other configurations remain the same as above
+  name                  = "rulesetaa"
+  cluster_name          = "myCluster"
+  location              = var.location
+  resource_group_name   = module.resource_group.name
+  workspace_id          = module.monitor_workspace.workspace_id
+  kubernetes_cluster_id = module.aks.cluster_id
   rules = [
     // Alert rule
     {
